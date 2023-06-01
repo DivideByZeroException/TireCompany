@@ -1,14 +1,15 @@
 ﻿@page "/logout"
 @using TireCompany.Data
 @inject NavigationManager NavigationManager;
-
+@using MongoDB.Bson;
+@using MongoDB.Bson.Serialization.Attributes;
 @inject UserService UserService
 
 @code{
     protected override async Task OnInitializedAsync()
     {
-        UserService.UserId = null;
-        Navigationmanager.NavigateTo("/", true);
+        UserService.UserId = ObjectId.Empty;
+        NavigationManager.NavigateTo("/", true);
     }
 
 }
