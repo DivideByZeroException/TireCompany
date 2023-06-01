@@ -1,0 +1,62 @@
+﻿@page "/"
+@page "/signin"
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@using TireCompany.Data
+<head>
+    <link href="css/auth.css" rel="stylesheet" />
+</head>
+<div class="auth">
+    <div class="auth_form">
+        <h1>Авторизация</h1>
+        <form>
+            <div class="input_box">
+
+                <input type="text" placeholder="Логин" @bind-value="@login" />
+
+                <input type="password" placeholder="Пароль" @bind-value="@password" />
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
+                <a class="btn_auth" @onclick="Authorization">Войти</a>
+                <a class="btn_reg" @onclick="Registration">Еще нет аккаунта?</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+@code{
+
+    private string login;
+    private string password;
+    private string error;
+    private void Authorization()
+    {
+        User user = Database.FindUser(login);
+        if (user != null)
+        {
+            if (password == user.Password)
+            {
+                UserService.UserId = user._id;
+                NavigationManager.NavigateTo("mainpage", true);
+
+            }
+            else
+            {
+                
+                error = "Неверный пароль";
+            }
+
+        }
+        else
+        {
+           
+            error = "Пользователя с таким логином не найдено";
+        }
+    }
+    private void Registration()
+    {
+        NavigationManager.NavigateTo("signup", true);
+    }
+}

@@ -1,0 +1,94 @@
+﻿
+@page "/signup"
+@inject NavigationManager NavigationManager
+@using System.Text.RegularExpressions
+@using TireCompany.Data
+@inject UserService UserService
+
+<head>
+    <link href="css/reg.css" rel="stylesheet" />
+</head>
+<div class="reg">
+    <div class="reg_form">
+        <h1>Окно регистрации</h1>
+        <form>
+            <div class="input_box">
+
+                <input type="text" placeholder="Логин" @bind-value="@login" />
+
+                <input type="password" placeholder="Пароль" @bind-value="@password" />
+                <input type="password" placeholder="Повтор пароля" @bind-value="@repeat_password" />
+
+                <input type="text" placeholder="Имя" @bind-value="@name" />
+                <input type="text" placeholder="Фамилия" @bind-value="@second_name" />
+                <input type="text" placeholder="Почта" @bind-value="@email" />
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
+                <a class="btn_reg" @onclick="Registration"> Зарегистрироваться</a>
+                <a class="btn_auth" @onclick="Authorization"> Есть аккаунт?</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+@code{
+
+    string login;
+    string password;
+    string repeat_password;
+    string name;
+    string second_name;
+    string email;
+    string error;
+    private void Authorization()
+    {
+        NavigationManager.NavigateTo("signin");
+    }
+    private void Registration()
+    {
+        error = null;
+        if (@login == null || @password == null || @repeat_password == null || @name == null || @second_name == null || @email == null)
+        {
+            error = "Все поля должны быть заполнены";
+
+        }
+        if (@password != @repeat_password)
+        {
+            error = "Пароли не совпадают";
+
+        }
+        if (@password!=null && @password.Length < 6)
+        {
+            error = "Минимальная длина пароля 6 символов";
+        }
+        string emailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
+
+        if (@email!=null && !Regex.IsMatch(email, emailPattern))
+        {
+            error = "Не правильная почта";
+        }
+        if (Database.FindUser(login) != null)
+        {
+            error = "Такой логин уже занят";
+        }
+        if (error == null)
+        {
+
+
+
+            User user = new User(name, second_name, email, password, login, "user");
+
+
+            Database.AddUser(user);
+            UserService.UserId = user._id;
+            NavigationManager.NavigateTo("", true);
+
+
+
+
+
+        }
+    }
+}
