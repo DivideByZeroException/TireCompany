@@ -1,0 +1,40 @@
+﻿@page "/addproducttype"
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@using TireCompany.Data
+<head>
+    <link href="css/addproducttype.css" rel="stylesheet" />
+</head>
+<div class="addproducttype">
+    <div class="addproducttype_form">
+        <h1>Добавить тип</h1>
+        <form>
+            <div class="input_box">
+
+           
+                <input type="text" placeholder="Название" @bind-value="@title" />
+
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
+                <a class="btn_addproducttype" @onclick="Add">Добавить</a>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+@code{
+
+
+    private string title;
+
+
+    private string error;
+    private void Add()
+    {
+        Database.AddProductType(new ProductType(title));
+    }
+
+}

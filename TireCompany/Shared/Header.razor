@@ -12,10 +12,10 @@
 
     </div>
     <div class="buttons">
-        <a>dfdfdfdf</a>
-        <a>dfdfdfdf</a>
-        <a>dfdfdfdf</a>
-        <a class="exit" @onclick="Logout">Выйти из аккаунта</a>
+        <a @onclick="AddProduct">Добавить продукцию</a>
+        <a @onclick="AddProductType">Добавить тип продукта</a>
+
+        <a @onclick="Logout">Выйти из аккаунта</a>
     </div>
 </div>
 
@@ -29,5 +29,12 @@
 
 
     }
-
+    public void AddProduct()
+    {
+        NavigationManager.NavigateTo("/addproduct", true);
+    }
+     public void AddProductType()
+    {
+        NavigationManager.NavigateTo("/addproducttype", true);
+    }
 }

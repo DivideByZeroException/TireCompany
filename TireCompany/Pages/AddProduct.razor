@@ -1,0 +1,98 @@
+﻿@page "/addproduct"
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+@using Microsoft.AspNetCore.Hosting
+@inject IWebHostEnvironment env
+@using TireCompany.Data
+
+<head>
+    <link href="css/addproduct.css" rel="stylesheet" />
+</head>
+<div class="addproduct">
+    <div class="addproduct_form">
+        <h1>Авторизация</h1>
+        <form>
+            <div class="input_box">
+
+                <input type="text" placeholder="Артикул" @bind-value="@article" />
+                <input type="text" placeholder="Название" @bind-value="@title" />
+
+                @if (Database.GetProductTypes().Count == 0)
+                {
+                    <p class="error">Продукты пока не добавлены</p>
+                }
+                else
+                {
+                    <select @bind="@productype">
+                        <option value=null selected disabled hidden>Выберите продукт</option>
+
+                        @foreach (ProductType pt in Database.GetProductTypes())
+                        {
+                            <option>@pt.Title</option>
+                        }
+
+                    </select>}
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
+                @*<InputFile OnChange="@LoadFiles" />*@
+                <input type="number" placeholder="Количество людей" @bind-value="@peoples" />
+                <input type="number" placeholder="Номер цеха" @bind-value="@workshop" />
+                <textarea placeholder="Описание" @bind="@description" />
+
+                @foreach (var item in mc)
+                {
+            <div class="new_material">
+                <input type="text" class="material_title" placeholder="Материал" @bind-value="@item.Material.Title" />
+                <input type="number" class="material_count" placeholder="Количество" @bind-value="@item.Count" />
+            </div>
+                }
+               
+                <a class="btn_addmaterial" @onclick="AddMaterial">Добавить материал</a>
+                <a class="btn_addproduct" @onclick="Add">Добавить</a>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+@code{
+    private int currentmaterialcount = 0;
+    private string article;
+    private string title;
+    List<MaterialCount> mc = new List<MaterialCount>() {};
+
+
+    private string productype;
+    private int? peoples = null;
+    private int? workshop = null;
+    private string description;
+    private bool isLoading;
+    //private List<IBrowserFile> loadedFiles = new();
+    private string error;
+    int countFiles = 1;
+    //private void LoadFiles(InputFileChangeEventArgs e)
+    //{
+    //    loadedFiles.Clear();
+    //    isLoading = true;
+    //    foreach (var file in e.GetMultipleFiles(countFiles))
+    //    {
+    //        loadedFiles.Add(file);
+    //    }
+    //    isLoading = false;
+    //}
+    private void Add()
+    {
+
+    }
+    private void AddMaterial()
+    {
+
+        currentmaterialcount++;
+        mc.Add(new MaterialCount(new Material(null),0));
+
+    }
+
+}

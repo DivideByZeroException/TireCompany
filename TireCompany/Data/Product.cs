@@ -6,13 +6,15 @@ namespace TireCompany.Data
     {
         [BsonId]
         public ObjectId _id;
-        public string Name { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Login { get; set; }
-        public string Role { get; set; }
+        public string Article { get; set; }
+        public string Title { get; set; }
+        public ObjectId Type { get; set; }
+        public string ImagePath { get; set; }
+        public int  PeopleCount { get; set; }
+        public int Workshop { get; set; }
+        public double Price { get; set; }
+        public string Description { get; set; }
 
-        
+        public MaterialCount[] Materials { get; set; }
     }
 }
