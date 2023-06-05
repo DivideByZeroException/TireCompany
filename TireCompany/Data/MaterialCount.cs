@@ -4,13 +4,13 @@ namespace TireCompany.Data
 {
     public class MaterialCount
     {
-        public MaterialCount(Material material, int count)
+        public MaterialCount(ObjectId material, int count)
         {
             Material = material;
             Count = count;
         }
 
-        public Material Material { get; set; }
+        public ObjectId Material { get; set; }
         public int Count { get; set; }
 
 

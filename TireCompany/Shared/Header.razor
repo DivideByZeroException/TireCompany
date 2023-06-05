@@ -14,6 +14,7 @@
     <div class="buttons">
         <a @onclick="AddProduct">Добавить продукцию</a>
         <a @onclick="AddProductType">Добавить тип продукта</a>
+        <a @onclick="AddMaterial">Добавить материал</a>
 
         <a @onclick="Logout">Выйти из аккаунта</a>
     </div>
@@ -36,5 +37,9 @@
      public void AddProductType()
     {
         NavigationManager.NavigateTo("/addproducttype", true);
+    }
+    public void AddMaterial()
+    {
+        NavigationManager.NavigateTo("/addmaterial", true);
     }
 }

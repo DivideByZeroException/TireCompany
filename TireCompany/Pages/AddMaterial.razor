@@ -1,0 +1,40 @@
+﻿@page "/addmaterial"
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@using TireCompany.Data
+<head>
+    <link href="css/addmaterial.css" rel="stylesheet" />
+</head>
+<div class="addmaterial">
+    <div class="addmaterial_form">
+        <h1>Добавить материал</h1>
+        <form>
+            <div class="input_box">
+
+           
+                <input type="text" placeholder="Название" @bind-value="@title" />
+
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
+                <a class="btn_addmaterial" @onclick="Add">Добавить</a>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+@code{
+
+
+    private string title;
+
+
+    private string error;
+    private void Add()
+    {
+        Database.AddMaterial(new Material(title));
+    }
+
+}

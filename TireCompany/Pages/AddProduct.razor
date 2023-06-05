@@ -1,7 +1,8 @@
 ﻿@page "/addproduct"
 @inject NavigationManager NavigationManager
 @inject UserService UserService
-
+@using MongoDB.Bson;
+@using MongoDB.Bson.Serialization.Attributes;
 @using Microsoft.AspNetCore.Hosting
 @inject IWebHostEnvironment env
 @using TireCompany.Data
@@ -44,12 +45,21 @@
 
                 @foreach (var item in mc)
                 {
-            <div class="new_material">
-                <input type="text" class="material_title" placeholder="Материал" @bind-value="@item.Material.Title" />
-                <input type="number" class="material_count" placeholder="Количество" @bind-value="@item.Count" />
-            </div>
+                    <div class="new_material">
+                        <select @bind="@item.Material">
+                            <option value=null selected disabled hidden>Выберите материал</option>
+
+                            @foreach (Material m in Database.GetMaterials())
+                            {
+                                <option value="@m._id">@m.Title</option>
+                            }
+
+                        </select>
+                        <input type="number" class="material_count" placeholder="Количество" @bind-value="@item.Count" />
+                        <img src="/images/remove.png" class="material_delete" @onclick="(() => DeleteMaterial(item))" />
+                    </div>
                 }
-               
+
                 <a class="btn_addmaterial" @onclick="AddMaterial">Добавить материал</a>
                 <a class="btn_addproduct" @onclick="Add">Добавить</a>
 
@@ -62,10 +72,11 @@
     private int currentmaterialcount = 0;
     private string article;
     private string title;
-    List<MaterialCount> mc = new List<MaterialCount>() {};
+    List<MaterialCount> mc = new List<MaterialCount>() { };
 
 
     private string productype;
+    private string material;
     private int? peoples = null;
     private int? workshop = null;
     private string description;
@@ -91,7 +102,14 @@
     {
 
         currentmaterialcount++;
-        mc.Add(new MaterialCount(new Material(null),0));
+        mc.Add(new MaterialCount(ObjectId.Empty, 0));
+
+    }
+    private void DeleteMaterial(MaterialCount item)
+    {
+
+        currentmaterialcount--;
+        mc.Remove(item);
 
     }
 

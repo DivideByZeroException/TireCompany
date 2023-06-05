@@ -32,12 +32,28 @@ namespace TireCompany
             var list = collection.Find(x=>true).ToList();
             return list;
         }
+        public static List<Material> GetMaterials()
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Material>("Materials");
+            var list = collection.Find(x => true).ToList();
+            return list;
+        }
         public static void AddProductType(ProductType pt)
         {
             var client = new MongoClient();
             var database = client.GetDatabase("TireDatabase");
             var collection = database.GetCollection<ProductType>("ProductTypes");
             collection.InsertOne(pt);
+        }
+
+        public static void AddMaterial(Material m)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Material>("Materials");
+            collection.InsertOne(m);
         }
     }
 }
