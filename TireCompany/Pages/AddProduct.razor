@@ -30,36 +30,42 @@
 
                         @foreach (ProductType pt in Database.GetProductTypes())
                         {
-                            <option>@pt.Title</option>
+                            <option value="@pt._id">@pt.Title</option>
                         }
 
                     </select>}
-                @if (error != null)
-                {
-                    <p class="error">@error</p>
-                }
+
                 @*<InputFile OnChange="@LoadFiles" />*@
                 <input type="number" placeholder="Количество людей" @bind-value="@peoples" />
                 <input type="number" placeholder="Номер цеха" @bind-value="@workshop" />
+                <input type="number" placeholder="Цена" @bind-value="@price" />
                 <textarea placeholder="Описание" @bind="@description" />
 
-                @foreach (var item in mc)
+                @foreach (var item in sm)
                 {
                     <div class="new_material">
-                        <select @bind="@item.Material">
-                            <option value=null selected disabled hidden>Выберите материал</option>
+                        <EditForm Model="item">
+                            <InputSelect @bind-Value="item.Material" class="material_title">
+                                <option value=null selected disabled hidden>Выберите материал</option>
 
-                            @foreach (Material m in Database.GetMaterials())
-                            {
-                                <option value="@m._id">@m.Title</option>
-                            }
+                                @foreach (Material m in Database.GetMaterials())
+                                    {
+                                    <option value="@m._id">@m.Title</option>
+                                    }
+                                /**/
 
-                        </select>
+
+
+                            </InputSelect>
+                        </EditForm>
                         <input type="number" class="material_count" placeholder="Количество" @bind-value="@item.Count" />
                         <img src="/images/remove.png" class="material_delete" @onclick="(() => DeleteMaterial(item))" />
                     </div>
                 }
-
+                @if (error != null)
+                {
+                    <p class="error">@error</p>
+                }
                 <a class="btn_addmaterial" @onclick="AddMaterial">Добавить материал</a>
                 <a class="btn_addproduct" @onclick="Add">Добавить</a>
 
@@ -69,20 +75,32 @@
     </div>
 </div>
 @code{
+    private string error = null;
+
     private int currentmaterialcount = 0;
     private string article;
     private string title;
-    List<MaterialCount> mc = new List<MaterialCount>() { };
+
+    public class StringMaterial
+    {
+        public string Material { get; set; }
+        public int Count { get; set; }
+    }
+
+    List<StringMaterial> sm = new List<StringMaterial>() { };
+
+    private string selected = null!;
 
 
     private string productype;
     private string material;
     private int? peoples = null;
     private int? workshop = null;
+    private double? price = null;
     private string description;
     private bool isLoading;
     //private List<IBrowserFile> loadedFiles = new();
-    private string error;
+
     int countFiles = 1;
     //private void LoadFiles(InputFileChangeEventArgs e)
     //{
@@ -94,22 +112,50 @@
     //    }
     //    isLoading = false;
     //}
+    List<MaterialCount> mc = new List<MaterialCount>() { };
     private void Add()
     {
+        error = null;
+        List<string> objids = new List<string>();
+        foreach (var item in sm)
+        {
+            if (item.Count<=0)
+            {
+                error = "Количество материала не может быть 0 и меньше";
+                break;
 
+            }
+
+            if (!objids.Contains(item.Material))
+            {
+                objids.Add(item.Material);
+
+            }
+            else
+            {
+                error = "Два одинаковых материала";
+                break;
+            }
+
+        }
+        if (error == null)
+        {
+            mc = sm.Select(x => new MaterialCount(ObjectId.Parse(x.Material), x.Count)).ToList();
+            Database.AddProduct(new Product(article, title, ObjectId.Parse(productype), "", peoples.Value, workshop.Value, price.Value, description, mc));
+        }
     }
     private void AddMaterial()
     {
 
         currentmaterialcount++;
-        mc.Add(new MaterialCount(ObjectId.Empty, 0));
+        sm.Add(new StringMaterial());
 
     }
-    private void DeleteMaterial(MaterialCount item)
+    private void DeleteMaterial(StringMaterial item)
     {
 
         currentmaterialcount--;
-        mc.Remove(item);
+        sm.Remove(item);
 
     }
 

@@ -3,4 +3,22 @@
 @inject NavigationManager NavigationManager
 @inject UserService UserService
 @using TireCompany.Data
+<head>
+    <link href="css/mainpage.css" rel="stylesheet" />
+</head>
 <Header></Header>
+
+    
+    <div class="products_box">
+        <div class="products">
+
+            @foreach (var product in Database.FindAllProducts())
+            {
+                <div class="product">
+                    <img src="images/img_20181214_121756.jpg"/>
+                    <h1>@product.Title</h1>
+                    <h1>@product.Price</h1>
+                </div>
+            }
+        </div>
+    </div>

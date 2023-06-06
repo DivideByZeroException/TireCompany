@@ -55,5 +55,20 @@ namespace TireCompany
             var collection = database.GetCollection<Material>("Materials");
             collection.InsertOne(m);
         }
+        public static void AddProduct(Product p)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            collection.InsertOne(p);
+        }
+        public static List<Product> FindAllProducts()
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            var list = collection.Find(x => true).ToList();
+            return list;
+        }
     }
 }

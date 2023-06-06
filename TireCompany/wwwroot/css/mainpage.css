@@ -1,0 +1,43 @@
+﻿@font-face {
+    font-family: "MainFont";
+    src: url("../fonts/MainFont.woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0 ;
+    font-family: MainFont
+}
+
+html, body {
+    width: 100%;
+    
+}
+body{display:flex}
+.products {
+    float: left;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    height: min-content;
+    
+}
+.product {
+    background: #E7F2E8;
+    height: min-content;
+    width: 30%;
+    margin: 20px;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: inset rgba(0,0,0,.3) 0 -3px 8px, inset rgba(252,255,255,.7) 0 3px 8px, rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+.products_box{
+    width:100%;display:flex;justify-content:center
+}
+img {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+}
