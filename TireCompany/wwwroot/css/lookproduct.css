@@ -1,0 +1,16 @@
+﻿@font-face {
+    font-family: "MainFont";
+    src: url("../fonts/MainFont.woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0 ;
+    font-family: MainFont
+}
+
+html, body {
+    width: 100%;
+    
+}
+body{display:flex}

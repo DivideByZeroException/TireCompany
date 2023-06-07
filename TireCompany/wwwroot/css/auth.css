@@ -15,7 +15,7 @@ html, body {
 }
 
 .auth {
-    background: #E7F2E8;
+    background: rgb(90,142,61);
     width: 100%;
     height: 100%;
     display: flex;

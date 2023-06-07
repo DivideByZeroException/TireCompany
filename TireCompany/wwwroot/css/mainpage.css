@@ -25,7 +25,7 @@ body{display:flex}
     
 }
 .product {
-    background: #E7F2E8;
+    background: #8ffc8d;
     height: min-content;
     width: 30%;
     margin: 20px;
@@ -34,10 +34,31 @@ body{display:flex}
     box-shadow: inset rgba(0,0,0,.3) 0 -3px 8px, inset rgba(252,255,255,.7) 0 3px 8px, rgba(0,0,0,.8) 0 3px 8px -3px;
 }
 .products_box{
-    width:100%;display:flex;justify-content:center
+    width:100%
 }
+    .products_box select, input {
+        padding: 8px;
+        border: none;
+        outline: none;
+        font-size: 26px;
+        margin-top: 10px;
+        border-radius: 8px;
+        margin-left: 10px
+    }
 img {
     width: 100%;
     height: 250px;
     border-radius: 8px;
+}
+.select_box p {font-size:24px;
+               margin:0;
+               
+}
+.select_box {
+    background: #8ffc8d;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    margin: 40px 20px;
+    padding: 20px
 }

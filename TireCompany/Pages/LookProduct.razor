@@ -1,0 +1,21 @@
+﻿@page "/lookproduct"
+@using TireCompany.Data
+@inject NavigationManager NavigationManager
+@using MongoDB.Bson
+@using MongoDB.Bson.Serialization.Attributes
+@inject UserService UserService
+@inject ProductService ProductService
+    <head>
+        <link href="css/lookproduct.css" rel="stylesheet" />
+    </head>
+    <Header></Header>
+<h1>@product.Title</h1>
+<h1>@product.Price</h1>
+@code{
+    Product product;
+    protected override async Task OnInitializedAsync()
+    {
+        product = Database.FindProductById(ProductService.ProductId);
+    }
+
+}

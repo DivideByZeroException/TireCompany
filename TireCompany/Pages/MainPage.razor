@@ -2,23 +2,83 @@
 @page "/mainpage"
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject ProductService ProductService
 @using TireCompany.Data
+@using MongoDB.Bson;
+@using MongoDB.Bson.Serialization.Attributes;
 <head>
     <link href="css/mainpage.css" rel="stylesheet" />
 </head>
 <Header></Header>
 
-    
-    <div class="products_box">
-        <div class="products">
 
-            @foreach (var product in Database.FindAllProducts())
-            {
-                <div class="product">
-                    <img src="images/img_20181214_121756.jpg"/>
-                    <h1>@product.Title</h1>
-                    <h1>@product.Price</h1>
-                </div>
-            }
-        </div>
+<div class="products_box">
+    
+    <div class="select_box">
+        <p>Сортировка</p>
+        <select @onchange="(value)=>Sort(value.Value.ToString())">
+            <option value="1">По названию</option>
+            <option value="2">По названию убывание</option>
+            <option value="3">По цене возрастание</option>
+            <option value="4">По цене убывание</option>
+        </select>
+        <input @oninput="(value)=>Find(value.Value.ToString())" placeholder="Искать по названию" />
+        <input @oninput="(value)=>FindArticle(value.Value.ToString())" placeholder="Искать по артикулу" />
     </div>
+    <div class="products">
+
+        @foreach (var product in filter)
+        {
+        <div class="product" @onclick="()=>Look(product._id)">
+            <img src="images/img_20181214_121756.jpg" />
+            <h1>@product.Title</h1>
+            <h1>@product.Price</h1>
+            <h3>@product.Article</h3>
+        </div>
+        }
+    </div>
+</div>
+@code{
+
+    List<Product> filter;
+    int sort_type;
+    protected override async Task OnInitializedAsync()
+    {
+        filter = Database.FindAllProducts().OrderBy(x => x.Title).ToList();
+    }
+    public void Find(string value)
+    {
+        filter = Database.FindAllProducts().Where(x=>x.Title.ToLower().Contains(value.ToLower())).OrderBy(x => x.Title).ToList();
+    }
+     public void FindArticle(string value)
+    {
+        filter = Database.FindAllProducts().Where(x=>x.Article.ToLower().Contains(value.ToLower())).OrderBy(x => x.Title).ToList();
+    }
+    public void Sort(string value)
+    {
+        if (value == "1")
+        {
+            filter = Database.FindAllProducts().OrderBy(x => x.Title).ToList();
+        }
+        if (value == "2")
+        {
+            filter = Database.FindAllProducts().OrderByDescending(x => x.Title).ToList();
+        }
+        else if (value == "3")
+        {
+            filter = Database.FindAllProducts().OrderBy(x => x.Price).ToList();
+        }
+        else if (value == "4")
+        {
+            filter = Database.FindAllProducts().OrderByDescending(x => x.Price).ToList();
+        }
+
+
+
+    }
+    public void Look(ObjectId productId)
+    {
+        ProductService.ProductId = productId;
+        NavigationManager.NavigateTo("lookproduct");
+    }
+}

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,14 @@ namespace TireCompany
             var collection = database.GetCollection<Product>("Products");
             var list = collection.Find(x => true).ToList();
             return list;
+        }
+        public static Product FindProductById(ObjectId id)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            var one = collection.Find(x => x._id == id).FirstOrDefault();
+            return one;
         }
     }
 }
