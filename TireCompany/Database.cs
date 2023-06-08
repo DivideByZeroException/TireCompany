@@ -79,5 +79,21 @@ namespace TireCompany
             var one = collection.Find(x => x._id == id).FirstOrDefault();
             return one;
         }
+        public static ProductType FindProductTypeById(ObjectId id)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<ProductType>("ProductTypes");
+            var one = collection.Find(x => x._id == id).FirstOrDefault();
+            return one;
+        }
+        public static Material FindMaterialById(ObjectId id)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Material>("Materials");
+            var one = collection.Find(x => x._id == id).FirstOrDefault();
+            return one;
+        }
     }
 }

@@ -62,3 +62,6 @@ img {
     margin: 40px 20px;
     padding: 20px
 }
+.price::after {
+    content: "₽"
+}
