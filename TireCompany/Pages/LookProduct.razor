@@ -12,7 +12,20 @@
     <div class="product_card">
         <h1>@product.Title</h1>
         <div class="img_and_another">
-            <img src="images/img_20181214_121756.jpg"/>
+            <div class="img_and_buttons">
+                <img src="images/img_20181214_121756.jpg" />
+                <div class="actions">
+                    <a @onclick="Edit">
+                        <p>Редактировать</p>
+                        <img class="icon" src="images/edit.png" />
+                    </a>
+                    <a  @onclick="Delete">
+                        <p>Удалить</p>
+                        <img class="icon" src="images/remove.png" />
+                    </a>
+                </div>
+               
+            </div>
             <div class="another">
                 <h1>@product.Price</h1>
                 <p>@product.Description</p>
@@ -50,6 +63,17 @@
     protected override async Task OnInitializedAsync()
     {
         product = Database.FindProductById(ProductService.ProductId);
+    }
+    public void Delete()
+    {
+        Database.DeleteProduct(ProductService.ProductId);
+        ProductService.ProductId = ObjectId.Empty;
+        NavigationManager.NavigateTo("/mainpage");
+    }
+     public void Edit()
+    {
+       
+        NavigationManager.NavigateTo("/editproduct");
     }
 
 }

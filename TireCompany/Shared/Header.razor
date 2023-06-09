@@ -10,7 +10,13 @@
     <a @onclick="AddProduct">Добавить продукцию</a>
     <a @onclick="AddProductType">Добавить тип продукта</a>
     <a @onclick="AddMaterial">Добавить материал</a>
+    @if (NavigationManager.Uri.Substring(NavigationManager.BaseUri.Length - 1) != "/mainpage")
+    {
+        <a @onclick="Main">На главную</a>
+    }
+   
     <a @onclick="Logout">Выйти из аккаунта</a>
+
 </aside>
 
 
@@ -20,14 +26,17 @@
             <h1>TireCompany</h1>
         </div>
         <div class="buttons">
-           
-          
+       
             
         </div>
     </div>
 </div>*@
 
 @code {
+     public void Main()
+    {
+        NavigationManager.NavigateTo("/mainpage", true);
+    }
     public void Logout()
     {
         NavigationManager.NavigateTo("/logout", true);

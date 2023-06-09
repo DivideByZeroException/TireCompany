@@ -1,6 +1,7 @@
-﻿@page "/addproduct"
+﻿@page "/editproduct"
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject ProductService ProductService
 @using MongoDB.Bson;
 @using MongoDB.Bson.Serialization.Attributes;
 @using Microsoft.AspNetCore.Hosting
@@ -8,11 +9,11 @@
 @using TireCompany.Data
 
 <head>
-    <link href="css/addproduct.css" rel="stylesheet" />
+    <link href="css/editproduct.css" rel="stylesheet" />
 </head>
-<div class="addproduct">
-    <div class="addproduct_form">
-        <h1>Добавить продукт</h1>
+<div class="editproduct">
+    <div class="editproduct_form">
+        <h1>Изменить продукт</h1>
         <form>
             <div class="input_box">
 
@@ -66,8 +67,8 @@
                 {
                     <p class="error">@error</p>
                 }
-                <a class="btn_addmaterial" @onclick="AddMaterial">Материал</a>
-                <a class="btn_addproduct" @onclick="Add">Добавить</a>
+                <a class="btn_addmaterial" @onclick="AddMaterial">Добавить материал</a>
+                <a class="btn_addproduct" @onclick="Save">Сохранить</a>
 
 
             </div>
@@ -75,6 +76,7 @@
     </div>
 </div>
 @code{
+    Product product;
     private string error = null;
 
     private int currentmaterialcount = 0;
@@ -85,6 +87,16 @@
     {
         public string Material { get; set; }
         public int Count { get; set; }
+
+        public StringMaterial(string material, int count)
+        {
+            Material = material;
+            Count = count;
+        }
+        public StringMaterial()
+        {
+
+        }
     }
 
     List<StringMaterial> sm = new List<StringMaterial>() { };
@@ -113,13 +125,13 @@
     //    isLoading = false;
     //}
     List<MaterialCount> mc = new List<MaterialCount>() { };
-    private void Add()
+    private void Save()
     {
         error = null;
         List<string> objids = new List<string>();
         if (article == "" || title == "" || productype == null || peoples == null || workshop == null|| price==null|| description == "")
         { error = "Не все поля заполнены"; };
-         if (Database.FindProductByArticle(article) != null)
+        if (Database.FindProductByArticle(article) != null && Database.FindProductByArticle(article)._id!=ProductService.ProductId)
         {
             error = "Этот артикул уже занят";
         };
@@ -150,7 +162,7 @@
             }
             if (item.Material == null)
             {
-                 error = "Заполните название материала";
+                error = "Заполните название материала";
                 break;
             };
             if (!objids.Contains(item.Material))
@@ -167,9 +179,8 @@
         }
         if (error == null)
         {
-            
             mc = sm.Select(x => new MaterialCount(ObjectId.Parse(x.Material), x.Count)).ToList();
-            Database.AddProduct(new Product(article, title, ObjectId.Parse(productype), "", peoples.Value, workshop.Value, price.Value, description, mc));
+            Database.EditProduct("","",ProductService.ProductId,new Product(article, title, ObjectId.Parse(productype), "", peoples.Value, workshop.Value, price.Value, description, mc));
             NavigationManager.NavigateTo("/mainpage");
         }
     }
@@ -186,6 +197,18 @@
         currentmaterialcount--;
         sm.Remove(item);
 
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        product = Database.FindProductById(ProductService.ProductId);
+        peoples = product.PeopleCount;
+        title = product.Title;
+        article = product.Article;
+        workshop = product.Workshop;
+        price = product.Price;
+        description = product.Description;
+        productype = product.Type.ToString();
+        sm = product.Materials.Select(x => new StringMaterial(x.Material.ToString(), x.Count)).ToList();
     }
 
 }

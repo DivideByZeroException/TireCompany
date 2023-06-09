@@ -30,3 +30,18 @@ li{list-style-position:inside}
     background-repeat: no-repeat;
     list-style:none;
 }
+.img_and_buttons{
+    display:flex;
+    flex-direction:column;
+}
+.icon{
+    width:28px !important;
+    height:28px !important;
+    margin-left:10px;
+}
+.actions{display:flex; margin-top:10px;align-items:center;}
+.actions p{font-size:22px;margin:0}
+.actions a{
+    display: flex;
+    align-items: center;
+}

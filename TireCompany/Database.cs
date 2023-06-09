@@ -30,7 +30,7 @@ namespace TireCompany
             var client = new MongoClient();
             var database = client.GetDatabase("TireDatabase");
             var collection = database.GetCollection<ProductType>("ProductTypes");
-            var list = collection.Find(x=>true).ToList();
+            var list = collection.Find(x => true).ToList();
             return list;
         }
         public static List<Material> GetMaterials()
@@ -79,6 +79,14 @@ namespace TireCompany
             var one = collection.Find(x => x._id == id).FirstOrDefault();
             return one;
         }
+        public static Product FindProductByArticle(string article)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            var one = collection.Find(x => x.Article == article).FirstOrDefault();
+            return one;
+        }
         public static ProductType FindProductTypeById(ObjectId id)
         {
             var client = new MongoClient();
@@ -94,6 +102,36 @@ namespace TireCompany
             var collection = database.GetCollection<Material>("Materials");
             var one = collection.Find(x => x._id == id).FirstOrDefault();
             return one;
+        }
+        public static void DeleteProduct(ObjectId product)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            collection.DeleteOne(z => z._id == product);
+
+        }
+
+        public static void EditProduct(string filename, string path, ObjectId product,Product editedProduct)
+        {
+            var client = new MongoClient();
+
+           // var db = client.GetDatabase("Kraeved");
+            //if (filename != "" && path != "")
+            //{
+
+            //    IGridFSBucket gridFS = new GridFSBucket(db);
+
+
+            //    using Stream fs = File.OpenRead(path);
+
+            //    ObjectId id = gridFS.UploadFromStream(filename, fs);
+            //}
+
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<Product>("Products");
+            var update = Builders<Product>.Update.Set(p => p.Title, editedProduct.Title).Set(p => p.Description, editedProduct.Description).Set(p => p.ImagePath, editedProduct.ImagePath).Set(p => p.Article, editedProduct.Article).Set(p=>p.PeopleCount,editedProduct.PeopleCount).Set(p=>p.Workshop,editedProduct.Workshop).Set(p=>p.Price,editedProduct.Price).Set(p=>p.Materials,editedProduct.Materials).Set(p=>p.Type,editedProduct.Type);
+            collection.UpdateMany(x => x._id == product, update);
         }
     }
 }
