@@ -5,6 +5,7 @@
 @using MongoDB.Bson.Serialization.Attributes;
 @using Microsoft.AspNetCore.Hosting
 @inject IWebHostEnvironment env
+@using System.IO
 @using TireCompany.Data
 
 <head>
@@ -35,7 +36,7 @@
 
                     </select>}
 
-                @*<InputFile OnChange="@LoadFiles" />*@
+                <InputFile OnChange="@LoadFiles" />
                 <input type="number" placeholder="Количество людей" @bind-value="@peoples" />
                 <input type="number" placeholder="Номер цеха" @bind-value="@workshop" />
                 <input type="number" placeholder="Цена" @bind-value="@price" />
@@ -99,27 +100,29 @@
     private double? price = null;
     private string description;
     private bool isLoading;
-    //private List<IBrowserFile> loadedFiles = new();
+    private List<IBrowserFile> loadedFiles = new();
 
     int countFiles = 1;
-    //private void LoadFiles(InputFileChangeEventArgs e)
-    //{
-    //    loadedFiles.Clear();
-    //    isLoading = true;
-    //    foreach (var file in e.GetMultipleFiles(countFiles))
-    //    {
-    //        loadedFiles.Add(file);
-    //    }
-    //    isLoading = false;
-    //}
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        loadedFiles.Clear();
+        isLoading = true;
+        foreach (var file in e.GetMultipleFiles(countFiles))
+        {
+            loadedFiles.Add(file);
+        }
+        isLoading = false;
+    }
     List<MaterialCount> mc = new List<MaterialCount>() { };
-    private void Add()
+     IBrowserFile file;
+        string path;
+    private async Task Add()
     {
         error = null;
         List<string> objids = new List<string>();
         if (article == "" || title == "" || productype == null || peoples == null || workshop == null|| price==null|| description == "")
         { error = "Не все поля заполнены"; };
-         if (Database.FindProductByArticle(article) != null)
+        if (Database.FindProductByArticle(article) != null)
         {
             error = "Этот артикул уже занят";
         };
@@ -150,7 +153,7 @@
             }
             if (item.Material == null)
             {
-                 error = "Заполните название материала";
+                error = "Заполните название материала";
                 break;
             };
             if (!objids.Contains(item.Material))
@@ -165,11 +168,27 @@
             }
 
         }
+       
+        if (loadedFiles.Count != 0)
+        {
+            file = loadedFiles[0];
+            path = Path.Combine("wwwroot", "uploads", file.Name);
+            using (FileStream fs = new(path, FileMode.Create))
+            {
+                await file.OpenReadStream(1000000000).CopyToAsync(fs);
+            }
+        }
+        else
+        {
+            error = "Фотография не загружена";
+            
+        }
         if (error == null)
         {
+          
             
             mc = sm.Select(x => new MaterialCount(ObjectId.Parse(x.Material), x.Count)).ToList();
-            Database.AddProduct(new Product(article, title, ObjectId.Parse(productype), "", peoples.Value, workshop.Value, price.Value, description, mc));
+            Database.AddProduct(new Product(article, title, ObjectId.Parse(productype), path, peoples.Value, workshop.Value, price.Value, description, mc));
             NavigationManager.NavigateTo("/mainpage");
         }
     }

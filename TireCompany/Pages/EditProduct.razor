@@ -6,6 +6,7 @@
 @using MongoDB.Bson.Serialization.Attributes;
 @using Microsoft.AspNetCore.Hosting
 @inject IWebHostEnvironment env
+@using System.IO
 @using TireCompany.Data
 
 <head>
@@ -36,7 +37,7 @@
 
                     </select>}
 
-                @*<InputFile OnChange="@LoadFiles" />*@
+                <InputFile OnChange="@LoadFiles" />
                 <input type="number" placeholder="Количество людей" @bind-value="@peoples" />
                 <input type="number" placeholder="Номер цеха" @bind-value="@workshop" />
                 <input type="number" placeholder="Цена" @bind-value="@price" />
@@ -53,7 +54,7 @@
                                     {
                                     <option value="@m._id">@m.Title</option>
                                     }
-                                /**/
+                               
 
 
 
@@ -104,6 +105,7 @@
     private string selected = null!;
 
 
+    private string image;
     private string productype;
     private string material;
     private int? peoples = null;
@@ -111,21 +113,22 @@
     private double? price = null;
     private string description;
     private bool isLoading;
-    //private List<IBrowserFile> loadedFiles = new();
+    private List<IBrowserFile> loadedFiles = new();
 
     int countFiles = 1;
-    //private void LoadFiles(InputFileChangeEventArgs e)
-    //{
-    //    loadedFiles.Clear();
-    //    isLoading = true;
-    //    foreach (var file in e.GetMultipleFiles(countFiles))
-    //    {
-    //        loadedFiles.Add(file);
-    //    }
-    //    isLoading = false;
-    //}
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        loadedFiles.Clear();
+        isLoading = true;
+        foreach (var file in e.GetMultipleFiles(countFiles))
+        {
+            loadedFiles.Add(file);
+        }
+        isLoading = false;
+    }
     List<MaterialCount> mc = new List<MaterialCount>() { };
-    private void Save()
+    string path;
+    private async Task Save()
     {
         error = null;
         List<string> objids = new List<string>();
@@ -177,10 +180,24 @@
             }
 
         }
+        if (loadedFiles.Count != 0)
+        {
+            var file = loadedFiles[0];
+            path = Path.Combine( "wwwroot", "uploads", file.Name);
+            using (FileStream fs = new(path, FileMode.Create))
+            {
+                await file.OpenReadStream(1000000000).CopyToAsync(fs);
+            }
+
+        }
+        else
+        {
+            path = image;
+        }
         if (error == null)
         {
             mc = sm.Select(x => new MaterialCount(ObjectId.Parse(x.Material), x.Count)).ToList();
-            Database.EditProduct("","",ProductService.ProductId,new Product(article, title, ObjectId.Parse(productype), "", peoples.Value, workshop.Value, price.Value, description, mc));
+            Database.EditProduct(ProductService.ProductId,new Product(article, title, ObjectId.Parse(productype), path, peoples.Value, workshop.Value, price.Value, description, mc));
             NavigationManager.NavigateTo("/mainpage");
         }
     }
@@ -208,6 +225,7 @@
         price = product.Price;
         description = product.Description;
         productype = product.Type.ToString();
+        image = product.ImagePath;
         sm = product.Materials.Select(x => new StringMaterial(x.Material.ToString(), x.Count)).ToList();
     }
 

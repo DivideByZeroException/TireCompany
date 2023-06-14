@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject UserService UserService
 @inject ProductService ProductService
+@using System.IO
 @using TireCompany.Data
 @using MongoDB.Bson;
 @using MongoDB.Bson.Serialization.Attributes;
@@ -30,7 +31,7 @@
         @foreach (var product in filter)
         {
         <div class="product" @onclick="()=>Look(product._id)">
-            <img src="images/img_20181214_121756.jpg" />
+            <img src="@Path.Combine( @product.ImagePath.Substring(7))"/>
             <h1>@product.Title</h1>
             <h1 class="price">@product.Price</h1>
             <h3>@product.Article</h3>

@@ -1,4 +1,5 @@
 ﻿@page "/lookproduct"
+@using System.IO
 @using TireCompany.Data
 @inject NavigationManager NavigationManager
 @using MongoDB.Bson
@@ -13,7 +14,7 @@
         <h1>@product.Title</h1>
         <div class="img_and_another">
             <div class="img_and_buttons">
-                <img src="images/img_20181214_121756.jpg" />
+                  <img src="@Path.Combine( @product.ImagePath.Substring(7))"/>
                 <div class="actions">
                     <a @onclick="Edit">
                         <p>Редактировать</p>

@@ -112,7 +112,7 @@ namespace TireCompany
 
         }
 
-        public static void EditProduct(string filename, string path, ObjectId product,Product editedProduct)
+        public static void EditProduct( ObjectId product,Product editedProduct)
         {
             var client = new MongoClient();
 
@@ -130,7 +130,7 @@ namespace TireCompany
 
             var database = client.GetDatabase("TireDatabase");
             var collection = database.GetCollection<Product>("Products");
-            var update = Builders<Product>.Update.Set(p => p.Title, editedProduct.Title).Set(p => p.Description, editedProduct.Description).Set(p => p.ImagePath, editedProduct.ImagePath).Set(p => p.Article, editedProduct.Article).Set(p=>p.PeopleCount,editedProduct.PeopleCount).Set(p=>p.Workshop,editedProduct.Workshop).Set(p=>p.Price,editedProduct.Price).Set(p=>p.Materials,editedProduct.Materials).Set(p=>p.Type,editedProduct.Type);
+            var update = Builders<Product>.Update.Set(p => p.Title, editedProduct.Title).Set(p => p.Description, editedProduct.Description).Set(p => p.ImagePath, editedProduct.ImagePath).Set(p => p.Article, editedProduct.Article).Set(p=>p.PeopleCount,editedProduct.PeopleCount).Set(p=>p.Workshop,editedProduct.Workshop).Set(p=>p.Price,editedProduct.Price).Set(p=>p.Materials,editedProduct.Materials).Set(p=>p.Type,editedProduct.Type).Set(p=>p.ImagePath,editedProduct.ImagePath);
             collection.UpdateMany(x => x._id == product, update);
         }
     }
