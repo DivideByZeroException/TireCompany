@@ -1,0 +1,43 @@
+﻿@page "/lookmaterials"
+@using System.IO
+@using TireCompany.Data
+@inject NavigationManager NavigationManager
+@using MongoDB.Bson
+@using MongoDB.Bson.Serialization.Attributes
+@inject UserService UserService
+@inject ProductService ProductService
+@inject MaterialService MaterialService
+    <head>
+        <link href="css/lookmaterials.css" rel="stylesheet" />
+    </head>
+    <Header></Header>
+  
+    <div class="materials">
+
+    
+@foreach(var item in materials)
+{
+   <div class="material">
+       <h1>@item.Title</h1>
+       <img  @onclick="()=>Edit(item._id)" src="images/edit.png">
+       <img  @onclick="()=>Delete(item._id)"  src="images/remove.png">
+   </div>
+}
+</div>
+@code{
+    List<Material> materials;
+    protected override async Task OnInitializedAsync()
+    {
+        materials = Database.FindAllMaterials();
+    }
+    private void Edit(ObjectId id)
+    {
+        MaterialService.MaterialId = id;
+        NavigationManager.NavigateTo("editmaterial");
+    }
+    private void Delete(ObjectId id)
+    {
+        Database.DeleteMaterial(id);
+        OnInitializedAsync();
+    }
+}

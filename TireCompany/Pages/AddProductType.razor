@@ -35,6 +35,8 @@
     private void Add()
     {
         Database.AddProductType(new ProductType(title));
+        NavigationManager.NavigateTo("/mainpage");
+
     }
 
 }

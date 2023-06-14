@@ -18,6 +18,7 @@
                 {
                     <p class="error">@error</p>
                 }
+                <a class="btn_addmaterial" @onclick="CheckList">Список материалов</a>
                 <a class="btn_addmaterial" @onclick="Add">Добавить</a>
 
 
@@ -27,14 +28,24 @@
 </div>
 @code{
 
-
-    private string title;
-
+    private string title = "";
+    private void CheckList()
+    {
+        NavigationManager.NavigateTo("/lookmaterials");
+    }
 
     private string error;
     private void Add()
     {
-        Database.AddMaterial(new Material(title));
+        if (title != "")
+        {
+            Database.AddMaterial(new Material(title));
+            NavigationManager.NavigateTo("/mainpage");
+        }
+        else
+        {
+            error = "Заполните название";
+        }
     }
 
 }
