@@ -80,6 +80,14 @@ namespace TireCompany
             var list = collection.Find(x => true).ToList();
             return list;
         }
+        public static List<ProductType> FindAllProductTypes()
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<ProductType>("ProductTypes");
+            var list = collection.Find(x => true).ToList();
+            return list;
+        }
         public static Product FindProductById(ObjectId id)
         {
             var client = new MongoClient();
@@ -102,6 +110,10 @@ namespace TireCompany
             var database = client.GetDatabase("TireDatabase");
             var collection = database.GetCollection<ProductType>("ProductTypes");
             var one = collection.Find(x => x._id == id).FirstOrDefault();
+            if (one == null)
+            {
+                return new ProductType("Тип продукта удален");
+            }
             return one;
         }
         public static Material FindMaterialById(ObjectId id)
@@ -140,6 +152,15 @@ namespace TireCompany
             collection.DeleteOne(z => z._id == id);
 
         }
+
+        public static void DeleteProductType(ObjectId id)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<ProductType>("ProductTypes");
+            collection.DeleteOne(z => z._id == id);
+
+        }
         public static void EditMaterial(ObjectId material, Material editedMaterial)
         {
             var client = new MongoClient();
@@ -147,6 +168,14 @@ namespace TireCompany
             var collection = database.GetCollection<Material>("Materials");
             var update = Builders<Material>.Update.Set(p => p.Title, editedMaterial.Title);
             collection.UpdateMany(x=>x._id==material,update);
+        }
+        public static void EditProductType(ObjectId productype, ProductType editedproductype)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("TireDatabase");
+            var collection = database.GetCollection<ProductType>("ProductTypes");
+            var update = Builders<ProductType>.Update.Set(p => p.Title, editedproductype.Title);
+            collection.UpdateMany(x => x._id == productype, update);
         }
     }
 }

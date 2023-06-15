@@ -1,0 +1,44 @@
+﻿@page "/lookproducttypes"
+@using System.IO
+@using TireCompany.Data
+@inject NavigationManager NavigationManager
+@using MongoDB.Bson
+@using MongoDB.Bson.Serialization.Attributes
+@inject UserService UserService
+@inject ProductService ProductService
+@inject MaterialService MaterialService
+@inject ProductTypeService ProductTypeService
+    <head>
+        <link href="css/lookproducttypes.css" rel="stylesheet" />
+    </head>
+    <Header></Header>
+  
+    <div class="producttypes">
+
+    
+@foreach(var item in producttypes)
+{
+   <div class="producttype">
+       <h1>@item.Title</h1>
+       <img  @onclick="()=>Edit(item._id)" src="images/edit.png">
+       <img  @onclick="()=>Delete(item._id)"  src="images/remove.png">
+   </div>
+}
+</div>
+@code{
+    List<ProductType> producttypes;
+    protected override async Task OnInitializedAsync()
+    {
+        producttypes = Database.FindAllProductTypes();
+    }
+    private void Edit(ObjectId id)
+    {
+        ProductService.ProductId = id;
+        NavigationManager.NavigateTo("editproducttype");
+    }
+    private void Delete(ObjectId id)
+    {
+        Database.DeleteProductType(id);
+        OnInitializedAsync();
+    }
+}

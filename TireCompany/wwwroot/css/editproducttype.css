@@ -17,17 +17,17 @@ html, body {
 }
 
 
-.addproduct {
+.editproducttype {
     
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding:20px
+   padding:20px
 }
 
-.addproduct_form {
+.editproducttype_form {
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -36,7 +36,7 @@ html, body {
     align-items: center;
     border-radius: 8px
 }
-.addproduct_form h1{
+.editproducttype_form h1{
     margin: 10px 0;
     font-size:48px
 }
@@ -56,7 +56,7 @@ html, body {
 
         
     }
-.btn_addproduct {
+.btn_addproducttype {
     padding: 7px 10px;
     border: none;
     outline: none;
@@ -71,13 +71,13 @@ html, body {
     transition:0.3s;
     border-radius:8px
 }
-    .btn_addproduct:hover {
+    .btn_addproducttype:hover {
         color: white;
         background: #99BDB0;
         transition:0.3s
     }
 
-.btn_addmaterial {
+.btn_addproducttype {
     padding: 7px 10px;
     border: none;
     outline: none;
@@ -93,7 +93,7 @@ html, body {
     border-radius: 8px
 }
 
-    .btn_addmaterial:hover {
+    .btn_addproducttype:hover {
         color: white;
         background: #99BDB0;
         transition: 0.3s
@@ -126,14 +126,14 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-.new_material{display:flex;justify-content:space-between;width:100%;align-items:center}
-.material_title {
-    width:calc(100%)
+.new_producttype{display:flex;justify-content:space-between;width:100%;align-items:center}
+.producttype_title {
+    width:calc(95%)
 }
-.material_count {
+.producttype_count {
     width: calc(20%)
 }
-.material_delete {
+.producttype_delete {
     width: 40px;
     height:40px;
     padding: 8px;

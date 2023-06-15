@@ -18,6 +18,7 @@
                 {
                     <p class="error">@error</p>
                 }
+                <a class="btn_addproducttype" @onclick="CheckList">Посмотреть список</a>
                 <a class="btn_addproducttype" @onclick="Add">Добавить</a>
 
 
@@ -38,5 +39,8 @@
         NavigationManager.NavigateTo("/mainpage");
 
     }
-
+     private void CheckList()
+    {
+        NavigationManager.NavigateTo("/lookproducttypes");
+    }
 }

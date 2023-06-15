@@ -41,7 +41,11 @@
                 <input type="number" placeholder="Номер цеха" @bind-value="@workshop" />
                 <input type="number" placeholder="Цена" @bind-value="@price" />
                 <textarea placeholder="Описание" @bind="@description" />
-
+                 @if (Database.GetMaterials().Count == 0)
+                {
+                    <p class="error">Продукты пока не добавлены</p>
+                }
+                
                 @foreach (var item in sm)
                 {
                     <div class="new_material">

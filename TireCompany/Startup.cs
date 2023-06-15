@@ -31,6 +31,7 @@ namespace TireCompany
             services.AddSingleton<UserService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<MaterialService>();
+            services.AddSingleton<ProductTypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
